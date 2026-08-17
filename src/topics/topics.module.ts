@@ -1,4 +1,8 @@
 import { Module } from '@nestjs/common';
 
-@Module({})
+import { ConfigModule } from 'src/config/config.module';
+
+@Module({
+  imports: [ConfigModule],
+})
 export class TopicsModule {}
