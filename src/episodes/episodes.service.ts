@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
-import type { Episode, CreateEpisodeDto } from './episodes.types';
+import type { CreateEpisodeDto } from './dto/episode.dto';
+import { Episode } from './entity/episode.entity';
 
 @Injectable()
 export class EpisodesService {
