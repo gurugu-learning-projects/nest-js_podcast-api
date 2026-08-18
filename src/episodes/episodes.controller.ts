@@ -9,12 +9,16 @@ import {
   Query,
 } from '@nestjs/common';
 
+import { ConfigService } from '../config/config.service';
 import { EpisodesService } from './episodes.service';
 import { CreateEpisodeDto, UpdateEpisodeDto } from './dto/episode.dto';
 
 @Controller('episodes')
 export class EpisodesController {
-  constructor(private readonly episodesService: EpisodesService) {}
+  constructor(
+    private readonly episodesService: EpisodesService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get()
   findAll(@Query('sort') sort: 'asc' | 'desc' = 'asc') {
