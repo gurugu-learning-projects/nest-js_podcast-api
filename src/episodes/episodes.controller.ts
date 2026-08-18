@@ -9,74 +9,40 @@ import {
   Query,
 } from '@nestjs/common';
 
-const episodes = [
-  {
-    id: 1,
-    title: 'Episode 1',
-    description: 'Description 1',
-  },
-  {
-    id: 2,
-    title: 'Episode 2',
-    description: 'Description 2',
-  },
-  {
-    id: 3,
-    title: 'Episode 3',
-    description: 'Description 3',
-  },
-];
+import { EpisodesService } from './episodes.service';
+import { CreateEpisodeDto, UpdateEpisodeDto } from './dto/episode.dto';
 
 @Controller('episodes')
 export class EpisodesController {
+  constructor(private readonly episodesService: EpisodesService) {}
+
   @Get()
   findAll(@Query('sort') sort: 'asc' | 'desc' = 'asc') {
-    return episodes.sort((a, b) => {
-      if (sort === 'asc') {
-        return a.id - b.id;
-      }
-      return b.id - a.id;
-    });
+    return this.episodesService.findAll(sort);
   }
 
   @Get('featured')
   findFeatured() {
-    return {
-      id: 1,
-      title: 'Episode 1',
-      description: 'Description 1',
-    };
+    return this.episodesService.findFeatured();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return `Episode ${id}`;
+    return this.episodesService.findOne(id);
   }
 
   @Post()
-  create(@Body() body: { title: string; description: string }) {
-    return {
-      id: Date.now(),
-      title: body.title,
-      description: body.description,
-    };
+  create(@Body() body: CreateEpisodeDto) {
+    return this.episodesService.create(body);
   }
 
   @Put(':id')
-  update(
-    @Param('id') id: string,
-    @Body() body: { title?: string; description?: string },
-  ) {
-    const idx = episodes.findIndex((ep) => String(ep.id) === id);
-
-    episodes[idx] = { ...episodes[idx], ...body };
-
-    return episodes.at(idx);
+  update(@Param('id') id: string, @Body() body: UpdateEpisodeDto) {
+    return this.episodesService.update(id, body);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    const idx = episodes.findIndex((ep) => String(ep.id) === id);
-    return episodes.splice(idx, 1);
+    return this.episodesService.delete(id);
   }
 }
