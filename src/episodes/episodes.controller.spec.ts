@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 
 import { ConfigModule } from '../config/config.module';
 import { EpisodesController } from './episodes.controller';
@@ -72,21 +73,38 @@ describe('EpisodesController', () => {
 
   describe('findOne', () => {
     const episodeId = 'id';
-    const mockResult = { id: episodeId, name: 'New episode' };
 
-    beforeEach(() => {
-      mockFindOne.mockResolvedValue(mockResult);
+    describe('when the episode is found', () => {
+      const mockResult = { id: episodeId, name: 'New episode' };
+
+      beforeEach(() => {
+        mockFindOne.mockResolvedValue(mockResult);
+      });
+
+      it('should call the findOne method with the correct parameters', async () => {
+        await controller.findOne(episodeId);
+        expect(mockFindOne).toHaveBeenCalledWith(episodeId);
+      });
+
+      it('should return the correct response', async () => {
+        const result = await controller.findOne(episodeId);
+
+        expect(result).toEqual(mockResult);
+      });
     });
 
-    it('should call the findOne method with the correct parameters', async () => {
-      await controller.findOne(episodeId);
-      expect(mockFindOne).toHaveBeenCalledWith(episodeId);
-    });
+    describe('when the episode is not found', () => {
+      beforeEach(() => {
+        mockFindOne.mockRejectedValue(
+          new NotFoundException('Episode not found'),
+        );
+      });
 
-    it('should return the correct response', async () => {
-      const result = await controller.findOne(episodeId);
-
-      expect(result).toEqual(mockResult);
+      it('should throw a NotFoundException', async () => {
+        await expect(controller.findOne(episodeId)).rejects.toThrow(
+          NotFoundException,
+        );
+      });
     });
   });
 
