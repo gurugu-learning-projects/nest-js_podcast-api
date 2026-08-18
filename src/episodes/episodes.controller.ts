@@ -7,6 +7,8 @@ import {
   Delete,
   Body,
   Query,
+  ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 
 import { ConfigService } from '../config/config.service';
@@ -21,8 +23,11 @@ export class EpisodesController {
   ) {}
 
   @Get()
-  findAll(@Query('sort') sort: 'asc' | 'desc' = 'asc') {
-    return this.episodesService.findAll(sort);
+  findAll(
+    @Query('sort') sort: 'asc' | 'desc' = 'asc',
+    @Query('limit', new DefaultValuePipe(100), ParseIntPipe) limit: number,
+  ) {
+    return this.episodesService.findAll(sort, limit);
   }
 
   @Get('featured')
