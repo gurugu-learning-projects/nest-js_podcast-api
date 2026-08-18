@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { ConfigService } from '../config/config.service';
+import { isPositivePipe } from '../pipes/is-positive.pipe';
 import { EpisodesService } from './episodes.service';
 import { CreateEpisodeDto, UpdateEpisodeDto } from './dto/episode.dto';
 
@@ -25,7 +26,8 @@ export class EpisodesController {
   @Get()
   findAll(
     @Query('sort') sort: 'asc' | 'desc' = 'asc',
-    @Query('limit', new DefaultValuePipe(100), ParseIntPipe) limit: number,
+    @Query('limit', new DefaultValuePipe(100), ParseIntPipe, isPositivePipe)
+    limit: number,
   ) {
     return this.episodesService.findAll(sort, limit);
   }
