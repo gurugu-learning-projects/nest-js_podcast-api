@@ -43,13 +43,13 @@ export class EpisodesController {
   }
 
   @Post()
-  create(@Body() body: CreateEpisodeDto) {
-    return this.episodesService.create(body);
+  create(@Body() createUserDto: CreateEpisodeDto) {
+    return this.episodesService.create(createUserDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() body: UpdateEpisodeDto) {
-    return this.episodesService.update(id, body);
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateEpisodeDto) {
+    return this.episodesService.update(id, updateUserDto);
   }
 
   @Delete(':id')
